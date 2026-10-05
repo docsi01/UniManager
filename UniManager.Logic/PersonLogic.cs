@@ -11,9 +11,9 @@ namespace UniManager.Logic
             _repo = repo;
         }
 
-        public IEnumerable<T> ReadAll()
+        public IEnumerable<T> ReadAll(string includeProperties ="")
         {
-            return _repo.ReadAll();
+            return _repo.ReadAll(includeProperties);
         }
 
         public T Read(int id)

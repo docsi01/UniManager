@@ -2,7 +2,7 @@
 {
     public interface IPersonLogic<T> where T : class
     {
-        IEnumerable<T> ReadAll();
+        IEnumerable<T> ReadAll(string includePropersties ="");
         T Read(int id);
         void Create(T entity);
         void Update(T entity);

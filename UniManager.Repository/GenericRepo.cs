@@ -13,9 +13,16 @@ namespace UniManager.Repository
             _dbSet = ctx.Set<T>();
         }
 
-        public IEnumerable<T> ReadAll()
+        public IEnumerable<T> ReadAll(string includeProperties="")
         {
-            return _dbSet.ToList();
+            IQueryable<T> query = _dbSet;
+            if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) { 
+                    query = query.Include(includeProperty);
+                }
+            }
+            return query.ToList();
         }
 
         public T Read(int id)

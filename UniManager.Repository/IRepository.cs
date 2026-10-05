@@ -6,7 +6,7 @@ namespace UniManager.Repository
 {
     public interface IRepository<T>where T : class
     {
-        IEnumerable<T> ReadAll();
+        IEnumerable<T> ReadAll(string inculeProperties ="");
         T Read(int id);
         void Create(T entity);
         void Update(T entity);

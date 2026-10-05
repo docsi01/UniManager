@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using UniManager.Logic;
 using UniManager.Models;
 using UniManager.Repository;
@@ -7,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;});
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -21,7 +22,11 @@ builder.Services.AddDbContext<UniDbContext>(options => options.UseSqlServer(conn
 builder.Services.AddScoped<IRepository<Student>, GenericRepo<Student>>();
 builder.Services.AddScoped<IRepository<Course>, GenericRepo<Course>>();
 builder.Services.AddScoped<IRepository<Enrollment>, GenericRepo<Enrollment>>();
+builder.Services.AddScoped<IRepository<Teacher>, GenericRepo<Teacher>>();
+builder.Services.AddScoped<IRepository<ClassRoom>, GenericRepo<ClassRoom>>();
 
+builder.Services.AddScoped<IPersonLogic<ClassRoom>, PersonLogic<ClassRoom>>();
+builder.Services.AddScoped<IPersonLogic<Teacher>, PersonLogic<Teacher>>();
 builder.Services.AddScoped<IPersonLogic<Student>,PersonLogic<Student>>();
 builder.Services.AddScoped<ICourseLogic<Course>, CourseLogic<Course>>();
 builder.Services.AddScoped<IEnrollmentLogic, EnrollmentLogic>();

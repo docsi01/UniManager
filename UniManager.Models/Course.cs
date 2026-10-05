@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace UniManager.Models
 {
@@ -11,11 +12,11 @@ namespace UniManager.Models
         public int Credits { get; set; }
 
         public int TeacherId {  get; set; }
-        public Teacher Teacher { get; set; } = null!;
+        public Teacher? Teacher { get; set; }
 
         public int ClassRoomId {  get; set; }
-        public ClassRoom ClassRoom { get; set; }=null!;
+        public ClassRoom? ClassRoom { get; set; }
 
-        public ICollection<Enrollment> Enrollments {  get; set; }
+        public ICollection<Enrollment>? Enrollments {  get; set; } = new List<Enrollment>();
     }
 }

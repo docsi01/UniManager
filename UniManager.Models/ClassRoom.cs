@@ -6,7 +6,7 @@
         public string RoomName { get; set; } = string.Empty;
         public int Capacity { get; set; }
 
-        public ICollection<Course> Courses { get; set; } = new List<Course>();
+        public ICollection<Course>? Courses { get; set; } = new List<Course>();
 
     }
 }

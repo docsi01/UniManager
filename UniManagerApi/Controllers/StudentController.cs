@@ -18,7 +18,7 @@ namespace UniManagerApi.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Student>> GetAll()
         {
-            var students = _studentLogic.ReadAll();
+            var students = _studentLogic.ReadAll("Enrollments.Course.Teacher");
             return Ok(students);
         }
 
