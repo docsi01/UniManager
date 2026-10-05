@@ -14,6 +14,7 @@ namespace UniManager.Models
 
         [JsonIgnore]
         public Student? Student { get; set; }
+        [JsonIgnore]
         public Course? Course { get; set; }
     }
 }

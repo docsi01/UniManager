@@ -15,10 +15,33 @@ namespace UniManagerApi.Controllers
             _classroomLogic = classroomLogic;
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public ActionResult<IEnumerable<ClassRoom>> GetAll()
         {
-            return Ok(_classroomLogic.ReadAll());
+            var classRoom=_classroomLogic.ReadAll();
+            return Ok(classRoom);
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<ClassRoom> Read(int id)
+        {
+            if (id < 1)
+            {
+                return BadRequest("ID must be greater than 0!");
+            }
+            try
+            {
+                var classRoom = _classroomLogic.Read(id);
+                if (classRoom == null)
+                {
+                    return NotFound($"No classroom found with this ID: {id}");
+                }
+                return Ok(classRoom);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost]
@@ -33,6 +56,25 @@ namespace UniManagerApi.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult Update(int id, [FromBody] ClassRoom updatedClassRoom)
+        {
+            if (id != updatedClassRoom.Id)
+            {
+                return BadRequest("The IDs don't match!");
+            }
+            try
+            {
+                _classroomLogic.Update(updatedClassRoom);
+                return Ok("ClassRoom updated successfully!");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+
         }
     }
 }

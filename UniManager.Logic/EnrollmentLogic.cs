@@ -51,5 +51,10 @@ namespace UniManager.Logic
             newEnrollment.Grade = "Not Graded";
             _enrollRepo.Create(newEnrollment);
         }
+
+        public void Update(Enrollment updatedEnrollment)
+        {
+            _enrollRepo.Update(updatedEnrollment);
+        }
     }
 }

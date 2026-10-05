@@ -17,11 +17,14 @@ namespace UniManager.Models
         public int Credits { get; set; }
 
         public int TeacherId {  get; set; }
+        [JsonIgnore]
         public Teacher? Teacher { get; set; }
 
         public int ClassRoomId {  get; set; }
+        [JsonIgnore]
         public ClassRoom? ClassRoom { get; set; }
 
+        [JsonIgnore]
         public ICollection<Enrollment>? Enrollments {  get; set; } = new List<Enrollment>();
     }
 }

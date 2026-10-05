@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using UniManager.Logic;
 using UniManager.Models;
-using UniManager.Repository;
 
 namespace UniManagerApi.Controllers
 {
@@ -17,10 +15,11 @@ namespace UniManagerApi.Controllers
             _enrollLogic = enrollLogic;
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public ActionResult<IEnumerable<Enrollment>> GetAll()
         {
-            return Ok(_enrollLogic.ReadAll());
+            var enrollment = _enrollLogic.ReadAll();
+            return Ok(enrollment);
         }
 
         [HttpPost]
@@ -31,9 +30,25 @@ namespace UniManagerApi.Controllers
                 _enrollLogic.Create(newEnrollment);
                 return Ok("Student successfully enrolled in the course!");
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult Update(int id, [FromBody] Enrollment updatedEnrollment)
+        {
+            if (id != updatedEnrollment.Id)
+            {
+                return BadRequest("The IDs don't match!");
+            }
+            try
+            {
+                _enrollLogic.Update(updatedEnrollment);
+                return Ok("Enrollment successfully updated!");
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
         }
     }
 }

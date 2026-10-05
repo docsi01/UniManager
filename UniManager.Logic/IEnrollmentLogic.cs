@@ -9,5 +9,6 @@ namespace UniManager.Logic
     {
         IEnumerable<Enrollment> ReadAll();
         void Create(Enrollment enrollment);
+        void Update(Enrollment enrollment);
     }
 }

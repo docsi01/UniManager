@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace UniManager.Models
 {
@@ -11,6 +12,7 @@ namespace UniManager.Models
         public string RoomName { get; set; } = string.Empty;
         public int Capacity { get; set; }
 
+        [JsonIgnore]
         public ICollection<Course>? Courses { get; set; } = new List<Course>();
 
     }
