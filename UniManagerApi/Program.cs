@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using UniManager.Logic;
+using UniManager.Models;
 using UniManager.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,14 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<UniDbContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddScoped<IRepository<Student>, GenericRepo<Student>>();
+builder.Services.AddScoped<IRepository<Course>, GenericRepo<Course>>();
+builder.Services.AddScoped<IRepository<Enrollment>, GenericRepo<Enrollment>>();
+
+builder.Services.AddScoped<IPersonLogic<Student>,PersonLogic<Student>>();
+builder.Services.AddScoped<ICourseLogic<Course>, CourseLogic<Course>>();
+builder.Services.AddScoped<IEnrollmentLogic, EnrollmentLogic>();
 
 var app = builder.Build();
 
