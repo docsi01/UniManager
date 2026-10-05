@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UniManager.Logic\UniManager.Logic.csproj" />
+    <ProjectReference Include="..\UniManager.Models\UniManager.Models.csproj" />
+    <ProjectReference Include="..\UniManager.Repository\UniManager.Repository.csproj" />
+  </ItemGroup>
+
+</Project>

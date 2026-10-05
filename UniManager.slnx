@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="UniManager.Logic/UniManager.Logic.csproj" />
+  <Project Path="UniManager.Models/UniManager.Models.csproj" />
+  <Project Path="UniManager.Repository/UniManager.Repository.csproj" />
+  <Project Path="UniManagerApi/UniManagerApi.csproj" />
+</Solution>
