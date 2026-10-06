@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using UniManager.Logic;
 using UniManager.Models;
+using UniManager.Models.DTOs;
 using UniManager.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,9 +26,9 @@ builder.Services.AddScoped<IGenericRepo<Enrollment>, GenericRepo<Enrollment>>();
 builder.Services.AddScoped<IGenericRepo<Teacher>, GenericRepo<Teacher>>();
 builder.Services.AddScoped<IGenericRepo<ClassRoom>, GenericRepo<ClassRoom>>();
 
-builder.Services.AddScoped<IPersonLogic<ClassRoom>, PersonLogic<ClassRoom>>();
-builder.Services.AddScoped<IPersonLogic<Teacher>, PersonLogic<Teacher>>();
-builder.Services.AddScoped<IPersonLogic<Student>,PersonLogic<Student>>();
+builder.Services.AddScoped<IClassRoomLogic, ClassRoomLogic>();
+builder.Services.AddScoped<ITeacherLogic, TeacherLogic>();
+builder.Services.AddScoped<IStudentLogic, StudentLogic>();
 builder.Services.AddScoped<ICourseLogic, CourseLogic>();
 builder.Services.AddScoped<IEnrollmentLogic, EnrollmentLogic>();
 

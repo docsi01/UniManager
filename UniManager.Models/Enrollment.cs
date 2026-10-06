@@ -12,10 +12,7 @@ namespace UniManager.Models
         public int StudentId {  get; set; }
         public string ?Grade {  get; set; }
         public string? Status {  get; set; }
-
-        [JsonIgnore]
         public Student? Student { get; set; }
-        [JsonIgnore]
         public Course? Course { get; set; }
     }
 }

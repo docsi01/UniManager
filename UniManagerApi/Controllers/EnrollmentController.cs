@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UniManager.Logic;
 using UniManager.Models;
+using UniManager.Models.DTOs;
 
 namespace UniManagerApi.Controllers
 {
@@ -23,7 +24,7 @@ namespace UniManagerApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Enroll([FromBody] Enrollment newEnrollment)
+        public async Task<ActionResult> Enroll([FromBody] EnrollmentCreateDto newEnrollment)
         {
             try
             {
@@ -34,12 +35,11 @@ namespace UniManagerApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, [FromBody] Enrollment updatedEnrollment)
+        public async Task<ActionResult> Update(int id, [FromBody] EnrollmentUpdateDto updatedEnrollment)
         {
-            if (id != updatedEnrollment.Id) { return BadRequest("The IDs don't match!"); }
             try
             {
-                await _enrollLogic.UpdateAsync(updatedEnrollment);
+                await _enrollLogic.UpdateAsync(id,updatedEnrollment);
                 return Ok("Enrollment successfully updated!");
             }
             catch (Exception ex) { return BadRequest(ex.Message); }

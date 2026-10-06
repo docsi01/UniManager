@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UniManager.Logic;
 using UniManager.Models;
+using UniManager.Models.DTOs;
 
 namespace UniManagerApi.Controllers
 {
@@ -8,9 +9,9 @@ namespace UniManagerApi.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        private readonly IPersonLogic<Student> _studentLogic;
+        private readonly IStudentLogic _studentLogic;
 
-        public StudentController(IPersonLogic<Student> studentLogic)
+        public StudentController(IStudentLogic studentLogic)
         {
             _studentLogic = studentLogic;
         }
@@ -35,7 +36,7 @@ namespace UniManagerApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] Student newStudent)
+        public async Task<ActionResult> Create([FromBody] StudentCreateDto newStudent)
         {
             try
             {
@@ -47,12 +48,11 @@ namespace UniManagerApi.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> Update(int id, [FromBody] Student updatedStudent)
+        public async Task<ActionResult> Update(int id, [FromBody] StudentUpdateDto updatedStudent)
         {
-            if (id != updatedStudent.Id) { return BadRequest("The IDs don't match"); }
             try
             {
-                await _studentLogic.UpdateAsync(updatedStudent);
+                await _studentLogic.UpdateAsync(id, updatedStudent);
                 return Ok("Student updated successfully!");
             }
             catch (Exception ex) { return StatusCode(500, ex.Message); }

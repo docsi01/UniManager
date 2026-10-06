@@ -1,21 +1,15 @@
 ﻿using UniManager.Models;
+using UniManager.Models.DTOs;
 
 namespace UniManager.Logic
 {
     public interface ICourseLogic
     {
-
-        IEnumerable<Course> ReadAll();
-        Task<IEnumerable<Course>> ReadAllAsync();
-
-        Course Read(int id);
-        Task ReadAsync(int id);
-
-        void Create(Course course);
-        Task CreateAsync(Course course);
-        void Update(Course course);
-        Task UpdateAsync(Course course);
-        void Delete(int id);
+        //async
+        Task CreateAsync(CourseCreateDto course);
+        Task<IEnumerable<Course>> ReadAllAsync(string includeProperties = "");
+        Task<Course?> ReadAsync(int id);
+        Task UpdateAsync(int id,CourseUpdateDto course);
         Task DeleteAsync(int id);
     }
 }

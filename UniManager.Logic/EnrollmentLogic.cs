@@ -1,5 +1,6 @@
 ﻿using UniManager.Models;
 using UniManager.Repository;
+using UniManager.Models.DTOs;
 
 namespace UniManager.Logic
 {
@@ -20,50 +21,7 @@ namespace UniManager.Logic
             _courseRepo = courseRepo;
         }
 
-        public IEnumerable<Enrollment> ReadAll()
-        {
-            return _enrollRepo.ReadAll();
-        }
-
-        public void Create(Enrollment newEnrollment)
-        {
-            var student = _studentRepo.Read(newEnrollment.StudentId);
-            if (student == null)
-            {
-                throw new Exception($"Student with this ID does not exist: {newEnrollment.StudentId}");
-            }
-
-            var course = _courseRepo.Read(newEnrollment.CourseId);
-            if (course == null)
-            {
-                throw new Exception($"Course with this ID does not exist: {newEnrollment.CourseId}");
-            }
-
-            var allEnrollments = _enrollRepo.ReadAll();
-            bool isAlreadyEnrolled = allEnrollments.Any(e =>
-                e.StudentId == newEnrollment.StudentId &&
-                e.CourseId == newEnrollment.CourseId);
-            if (isAlreadyEnrolled)
-            {
-                throw new Exception("This student is already enrolled in this course!");
-            }
-
-            newEnrollment.Grade = "Not Graded";
-            newEnrollment.Status = "Enrolled";
-            _enrollRepo.Create(newEnrollment);
-        }
-
-        public void Update(Enrollment updatedEnrollment)
-        {
-            _enrollRepo.Update(updatedEnrollment);
-        }
-
-        public async Task<IEnumerable<Enrollment>> ReadAllAsync()
-        {
-            return await _enrollRepo.ReadAllAsync();
-        }
-
-        public async Task CreateAsync(Enrollment newEnrollment)
+        public async Task CreateAsync(EnrollmentCreateDto newEnrollment)
         {
             var student = await _studentRepo.ReadAsync(newEnrollment.StudentId);
             if (student == null)
@@ -86,13 +44,36 @@ namespace UniManager.Logic
                 throw new Exception("This student is already enrolled in this course!");
             }
 
-            newEnrollment.Grade = "Not Graded";
-            await _enrollRepo.CreateAsync(newEnrollment);
+            var enrollment = new Enrollment
+            {
+                StudentId = newEnrollment.StudentId,
+                CourseId = newEnrollment.CourseId,
+                Grade = "Not Graded",
+                Status = "Enrolled"
+            };
+            await _enrollRepo.CreateAsync(enrollment);
         }
-
-        public async Task UpdateAsync(Enrollment updatedEnrollment)
+        public async Task<IEnumerable<Enrollment>> ReadAllAsync(string includeProperties = "")
         {
-            await _enrollRepo.UpdateAsync(updatedEnrollment);
+            return await _enrollRepo.ReadAllAsync(includeProperties);
+        }
+        public async Task<Enrollment> ReadAsync(int id)
+        {
+            return await _enrollRepo.ReadAsync(id);
+        }
+        public async Task UpdateAsync(int id,EnrollmentUpdateDto updatedEnrollment)
+        {
+            var existingEnrollment = await _enrollRepo.ReadAsync(id);
+            if (existingEnrollment == null) { throw new Exception($"Student with this ID ({id}) not found!"); }
+            
+            existingEnrollment.Grade = updatedEnrollment.Grade;
+            existingEnrollment.Status = updatedEnrollment.Status;
+
+            await _enrollRepo.UpdateAsync(existingEnrollment);
+        }
+        public async Task DeleteAsync(int id)
+        {
+            await _enrollRepo.DeleteAsync(id);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using UniManager.Models;
+using UniManager.Models.DTOs;
 using UniManager.Repository;
 
 namespace UniManager.Logic
@@ -10,53 +11,38 @@ namespace UniManager.Logic
         {
             _repo = repo;
         }
-        public IEnumerable<Course> ReadAll()
-        {
-            return _repo.ReadAll();
-        }
 
-        public async Task<IEnumerable<Course>> ReadAllAsync()
+        public async Task CreateAsync(CourseCreateDto entity)
         {
-            return await _repo.ReadAllAsync();
+            var newCourse = new Course
+            {
+                Title = entity.Title,
+                Credits = entity.Credits,
+                TeacherId = entity.TeacherId,
+                ClassRoomId = entity.ClassRooomId,
+            };
+            await _repo.CreateAsync(newCourse);
         }
-
-        public Course Read(int id)
+        public async Task<IEnumerable<Course>> ReadAllAsync(string includeProperties = "")
         {
-            return _repo.Read(id);
+            return await _repo.ReadAllAsync(includeProperties);
         }
-
-        public Task ReadAsync(int id)
+        public async Task<Course?> ReadAsync(int id)
         {
-            return _repo.ReadAsync(id);
+            return await _repo.ReadAsync(id);
         }
-
-        public void Create(Course entity)
+        public async Task UpdateAsync(int id, CourseUpdateDto entity)
         {
-            ArgumentNullException.ThrowIfNull(entity);
-            _repo.Create(entity);
-        }
+            var existingCourse= await _repo.ReadAsync(id);
+            if (existingCourse == null) { throw new Exception($"Course with this ID ({id}) was not found!"); }
 
-        public async Task CreateAsync(Course entity)
-        {
-            ArgumentNullException.ThrowIfNull(entity);
-            await _repo.CreateAsync(entity);
-        }
+            existingCourse.Title = entity.Title;
+            existingCourse.Credits = entity.Credits;
+            existingCourse.TeacherId = entity.TeacherId;
+            existingCourse.ClassRoomId = entity.ClassRoomId;
 
-        public void Update(Course entity)
-        {
-            _repo.Update(entity);
+            await _repo.UpdateAsync(existingCourse);
         }
-
-        public async Task UpdateAsync(Course entity)
-        {
-            await _repo.UpdateAsync(entity);
-        }
-
-        public void Delete(int id)
-        {
-            _repo.Delete(id);
-        }
-
         public async Task DeleteAsync(int id)
         {
             await _repo.DeleteAsync(id);
