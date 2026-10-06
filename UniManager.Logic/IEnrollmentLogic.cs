@@ -10,5 +10,9 @@ namespace UniManager.Logic
         IEnumerable<Enrollment> ReadAll();
         void Create(Enrollment enrollment);
         void Update(Enrollment enrollment);
+
+        Task<IEnumerable<Enrollment>> ReadAllAsync();
+        Task CreateAsync(Enrollment enrollment);
+        Task UpdateAsync(Enrollment enrollment);
     }
 }

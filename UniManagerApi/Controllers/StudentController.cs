@@ -16,50 +16,46 @@ namespace UniManagerApi.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<IEnumerable<Student>> GetAll()
+        public async Task<ActionResult<IEnumerable<Student>>> GetAll()
         {
-            var students = _studentLogic.ReadAll("Enrollments.Course.Teacher");
+            var students = await _studentLogic.ReadAllAsync("Enrollments.Course.Teacher");
             return Ok(students);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Student>Read(int id)
+        public async Task<ActionResult<Student>> Read(int id)
         {
-            var students =_studentLogic.Read(id);
-            return Ok(students);
+            if (id <= 0) { return BadRequest("The ID must be greater then 0!"); }
+            try
+            {
+                var students = await _studentLogic.ReadAsync(id);
+                return Ok(students);
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] Student newStudent)
+        public async Task<ActionResult> Create([FromBody] Student newStudent)
         {
             try
             {
                 newStudent.EnrollmentDate = DateTime.Now;
-                _studentLogic.Create(newStudent);
+                await _studentLogic.CreateAsync(newStudent);
                 return Ok("Student created successfully!");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
 
         [HttpPut]
-        public ActionResult Update(int id, [FromBody] Student updatedStudent)
+        public async Task<ActionResult> Update(int id, [FromBody] Student updatedStudent)
         {
-            if (id != updatedStudent.Id)
-            {
-                return BadRequest("The IDs don't match");
-            }
+            if (id != updatedStudent.Id) { return BadRequest("The IDs don't match"); }
             try
             {
-                _studentLogic.Update(updatedStudent);
+                await _studentLogic.UpdateAsync(updatedStudent);
                 return Ok("Student updated successfully!");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
     }
 }

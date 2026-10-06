@@ -16,54 +16,42 @@ namespace UniManagerApi.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<IEnumerable<Teacher>> GetAll()
+        public async Task<ActionResult<IEnumerable<Teacher>>> GetAll()
         {
-            var teachers = _teacherLogic.ReadAll("Courses");
+            var teachers = await _teacherLogic.ReadAllAsync("Courses");
             return Ok(teachers);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Teacher> Read(int id)
+        public async Task<ActionResult<Teacher>> Read(int id)
         {
-            if (id <= 0)
-            {
-                return BadRequest("The ID must be greater than 0!");
-            }
+            if (id <= 0) { return BadRequest("The ID must be greater than 0!"); }
             try
             {
-                var teachers = _teacherLogic.Read(id);
+                var teachers = await _teacherLogic.ReadAsync(id);
                 return Ok(teachers);
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] Teacher newTeacher)
+        public async Task<ActionResult> Create([FromBody] Teacher newTeacher)
         {
             try
             {
-                _teacherLogic.Create(newTeacher);
+                await _teacherLogic.CreateAsync(newTeacher);
                 return Ok("Teacher created successfully!");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] Teacher updatedTeacher)
+        public async Task<ActionResult> Update(int id, [FromBody] Teacher updatedTeacher)
         {
-            if (id != updatedTeacher.Id)
-            {
-                return BadRequest("The IDs don't match!");
-            }
+            if (id != updatedTeacher.Id) { return BadRequest("The IDs don't match!"); }
             try
             {
-                _teacherLogic.Update(updatedTeacher);
+                await _teacherLogic.UpdateAsync(updatedTeacher);
                 return Ok("Teacher updated successfully!");
             }
             catch (Exception ex) { return StatusCode(500, ex.Message); }

@@ -19,16 +19,16 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<UniDbContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddScoped<IRepository<Student>, GenericRepo<Student>>();
-builder.Services.AddScoped<IRepository<Course>, GenericRepo<Course>>();
-builder.Services.AddScoped<IRepository<Enrollment>, GenericRepo<Enrollment>>();
-builder.Services.AddScoped<IRepository<Teacher>, GenericRepo<Teacher>>();
-builder.Services.AddScoped<IRepository<ClassRoom>, GenericRepo<ClassRoom>>();
+builder.Services.AddScoped<IGenericRepo<Student>, GenericRepo<Student>>();
+builder.Services.AddScoped<IGenericRepo<Course>, GenericRepo<Course>>();
+builder.Services.AddScoped<IGenericRepo<Enrollment>, GenericRepo<Enrollment>>();
+builder.Services.AddScoped<IGenericRepo<Teacher>, GenericRepo<Teacher>>();
+builder.Services.AddScoped<IGenericRepo<ClassRoom>, GenericRepo<ClassRoom>>();
 
 builder.Services.AddScoped<IPersonLogic<ClassRoom>, PersonLogic<ClassRoom>>();
 builder.Services.AddScoped<IPersonLogic<Teacher>, PersonLogic<Teacher>>();
 builder.Services.AddScoped<IPersonLogic<Student>,PersonLogic<Student>>();
-builder.Services.AddScoped<ICourseLogic<Course>, CourseLogic<Course>>();
+builder.Services.AddScoped<ICourseLogic, CourseLogic>();
 builder.Services.AddScoped<IEnrollmentLogic, EnrollmentLogic>();
 
 var app = builder.Build();

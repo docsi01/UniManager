@@ -1,12 +1,21 @@
-﻿namespace UniManager.Logic
+﻿using UniManager.Models;
+
+namespace UniManager.Logic
 {
-    public interface ICourseLogic<T> where T : class
+    public interface ICourseLogic
     {
 
-        IEnumerable<T> ReadAll();
-        T Read(int id);
-        void Create(T course);
-        void Update(T course);
+        IEnumerable<Course> ReadAll();
+        Task<IEnumerable<Course>> ReadAllAsync();
+
+        Course Read(int id);
+        Task ReadAsync(int id);
+
+        void Create(Course course);
+        Task CreateAsync(Course course);
+        void Update(Course course);
+        Task UpdateAsync(Course course);
         void Delete(int id);
+        Task DeleteAsync(int id);
     }
 }

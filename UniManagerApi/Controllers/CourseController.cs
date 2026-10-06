@@ -8,64 +8,52 @@ namespace UniManagerApi.Controllers
     [ApiController]
     public class CourseController : ControllerBase
     {
-        private readonly ICourseLogic<Course> _courseLogic;
+        private readonly ICourseLogic _courseLogic;
 
-        public CourseController(ICourseLogic<Course> courseLogic)
+        public CourseController(ICourseLogic courseLogic)
         {
             _courseLogic = courseLogic;
         }
 
         [HttpGet("all")]
-        public ActionResult<IEnumerable<Course>> GetAll()
+        public async Task<ActionResult<IEnumerable<Course>>> GetAll()
         {
-            var courses = _courseLogic.ReadAll();
+            var courses = await _courseLogic.ReadAllAsync();
             return Ok(courses);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Course> Read(int id)
+        public async Task<ActionResult> Read(int id)
         {
-            if (id <= 0)
-            {
-                return BadRequest("The ID must be greater than 0");
-            }
+            if (id <= 0) { return BadRequest("The ID must be greater than 0"); }
             try
             {
-                var courses = _courseLogic.Read(id);
-                return Ok(courses);
+                await _courseLogic.ReadAsync(id);
+                return Ok("Course created successfully!");
             }
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] Course newCourse)
+        public async Task<ActionResult> Create([FromBody] Course newCourse)
         {
             try
             {
-                _courseLogic.Create(newCourse);
+                await _courseLogic.CreateAsync(newCourse);
                 return Ok("Course created successfully!");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] Course updatedCourse)
+        public async Task<ActionResult> Update(int id, [FromBody] Course updatedCourse)
         {
-            if (id != updatedCourse.Id)
-            {
-                return BadRequest($"The IDs don't match!");
-            }
+            if (id != updatedCourse.Id) { return BadRequest($"The IDs don't match!"); }
             try
             {
-                _courseLogic.Update(updatedCourse);
+                await _courseLogic.UpdateAsync(updatedCourse);
                 return Ok("Course successfully updated!");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
     }
 }

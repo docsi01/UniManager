@@ -16,64 +16,49 @@ namespace UniManagerApi.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<IEnumerable<ClassRoom>> GetAll()
+        public async Task<ActionResult<IEnumerable<ClassRoom>>> GetAll()
         {
-            var classRoom=_classroomLogic.ReadAll();
+            var classRoom = await _classroomLogic.ReadAllAsync();
             return Ok(classRoom);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ClassRoom> Read(int id)
+        public async Task<ActionResult<ClassRoom>> Read(int id)
         {
-            if (id < 1)
-            {
-                return BadRequest("ID must be greater than 0!");
-            }
+            if (id < 1) { return BadRequest("ID must be greater than 0!"); }
             try
             {
-                var classRoom = _classroomLogic.Read(id);
+                var classRoom = await _classroomLogic.ReadAsync(id);
                 if (classRoom == null)
                 {
                     return NotFound($"No classroom found with this ID: {id}");
                 }
                 return Ok(classRoom);
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] ClassRoom newClassRoom)
+        public async Task<ActionResult> Create([FromBody] ClassRoom newClassRoom)
         {
             try
             {
-                _classroomLogic.Create(newClassRoom);
+                await _classroomLogic.CreateAsync(newClassRoom);
                 return Ok("Classroom created successfully!");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] ClassRoom updatedClassRoom)
+        public async Task<ActionResult> Update(int id, [FromBody] ClassRoom updatedClassRoom)
         {
-            if (id != updatedClassRoom.Id)
-            {
-                return BadRequest("The IDs don't match!");
-            }
+            if (id != updatedClassRoom.Id) { return BadRequest("The IDs don't match!"); }
             try
             {
-                _classroomLogic.Update(updatedClassRoom);
+                await _classroomLogic.UpdateAsync(updatedClassRoom);
                 return Ok("ClassRoom updated successfully!");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            catch (Exception ex) { return StatusCode(500, ex.Message); }
 
         }
     }

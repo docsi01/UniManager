@@ -16,36 +16,30 @@ namespace UniManagerApi.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<IEnumerable<Enrollment>> GetAll()
+        public async Task<ActionResult<IEnumerable<Enrollment>>> GetAll()
         {
-            var enrollment = _enrollLogic.ReadAll();
+            var enrollment = await _enrollLogic.ReadAllAsync();
             return Ok(enrollment);
         }
 
         [HttpPost]
-        public ActionResult Enroll([FromBody] Enrollment newEnrollment)
+        public async Task<ActionResult> Enroll([FromBody] Enrollment newEnrollment)
         {
             try
             {
-                _enrollLogic.Create(newEnrollment);
+                await _enrollLogic.CreateAsync(newEnrollment);
                 return Ok("Student successfully enrolled in the course!");
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] Enrollment updatedEnrollment)
+        public async Task<ActionResult> Update(int id, [FromBody] Enrollment updatedEnrollment)
         {
-            if (id != updatedEnrollment.Id)
-            {
-                return BadRequest("The IDs don't match!");
-            }
+            if (id != updatedEnrollment.Id) { return BadRequest("The IDs don't match!"); }
             try
             {
-                _enrollLogic.Update(updatedEnrollment);
+                await _enrollLogic.UpdateAsync(updatedEnrollment);
                 return Ok("Enrollment successfully updated!");
             }
             catch (Exception ex) { return BadRequest(ex.Message); }
