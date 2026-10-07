@@ -19,7 +19,7 @@ namespace UniManager.Logic
                 Title = entity.Title,
                 Credits = entity.Credits,
                 TeacherId = entity.TeacherId,
-                ClassRoomId = entity.ClassRooomId,
+                ClassRoomId = entity.ClassRoomId,
             };
             await _repo.CreateAsync(newCourse);
         }

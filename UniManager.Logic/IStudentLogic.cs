@@ -11,7 +11,7 @@ namespace UniManager.Logic
         //async
         Task CreateAsync(StudentCreateDto student);
         Task<IEnumerable<Student>> ReadAllAsync(string includeProperties="");
-        Task <Student> ReadAsync(int id);
+        Task<Student?> ReadAsync(int id);
         Task UpdateAsync(int id, StudentUpdateDto student);
         Task DeleteAsync(int id);
     }

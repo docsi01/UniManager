@@ -30,6 +30,10 @@ namespace UniManagerApi.Controllers
             try
             {
                 var students = await _studentLogic.ReadAsync(id);
+                if (students == null)
+                {
+                    return NotFound($"No student found with this ID: {id}");
+                }
                 return Ok(students);
             }
             catch (Exception ex) { return BadRequest(ex.Message); }

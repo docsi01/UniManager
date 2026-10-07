@@ -80,14 +80,14 @@ Create a classroom:
 }
 ```
 
-Create a course. The current create DTO property is spelled `classRooomId` (three `o` characters in `Rooom`):
+Create a course:
 
 ```json
 {
   "title": "Introduction to Computing",
   "credits": 3,
   "teacherId": 1,
-  "classRooomId": 1
+	"classRoomId": 1
 }
 ```
 

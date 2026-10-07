@@ -6,13 +6,13 @@ namespace UniManager.Models.DTOs
 {
     public sealed class TeacherCreateDto
     {
-        public string firstName {  get; set; }=string.Empty;
-        public string lastName { get; set; } = string.Empty;
+        public required string firstName {  get; set; }
+        public required string lastName { get; set; }
 
     }
     public sealed class TeacherUpdateDto
     {
-        public string firstName { get; set; }=string.Empty;
-        public string lastName { get; set; }= string.Empty;
+        public string? firstName { get; set; }
+        public string? lastName { get; set; }
     }
 }

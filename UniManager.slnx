@@ -2,5 +2,6 @@
   <Project Path="UniManager.Logic/UniManager.Logic.csproj" />
   <Project Path="UniManager.Models/UniManager.Models.csproj" />
   <Project Path="UniManager.Repository/UniManager.Repository.csproj" />
+  <Project Path="UniManager.Tests/UniManager.Tests.csproj" Id="28996e96-c634-4fe2-8597-a282ca4ce7d0" />
   <Project Path="UniManagerApi/UniManagerApi.csproj" />
 </Solution>
