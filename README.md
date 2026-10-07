@@ -8,6 +8,7 @@ UniManager is a .NET 10 Web API for managing university students, teachers, cour
 - **UniManager.Logic** — application and enrollment logic
 - **UniManager.Repository** — generic EF Core repository, `UniDbContext`, and database migrations
 - **UniManager.Models** — domain entities and request DTOs
+- **UniManager.Tests** — NUnit unit tests for the student controller and logic
 
 ## Requirements
 
