@@ -12,7 +12,7 @@ namespace UniManager.Logic
             _repo = repo;
         }
 
-        public async Task CreateAsync(StudentCreateDto student)
+        public async Task<Student> CreateAsync(StudentCreateDto student)
         {
             var newStudent = new Student
             {
@@ -20,7 +20,8 @@ namespace UniManager.Logic
                 lastName = student.lastName,
                 EnrollmentDate = student.EnrollmentDate,
             };
-            await _repo.CreateAsync(newStudent);
+            return await _repo.CreateAsync(newStudent);
+            
         }
 
         public async Task<IEnumerable<Student>> ReadAllAsync(string includeProperties = "")

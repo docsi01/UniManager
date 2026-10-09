@@ -5,7 +5,7 @@ namespace UniManager.Logic
 {
     public interface ITeacherLogic
     {
-        Task CreateAsync(TeacherCreateDto teacher);
+        Task<Teacher> CreateAsync(TeacherCreateDto teacher);
         Task<IEnumerable<Teacher>> ReadAllAsync(string includeProperties = "");
         Task<Teacher?> ReadAsync(int id);
         Task UpdateAsync(int id, TeacherUpdateDto teacher);

@@ -12,14 +12,14 @@ namespace UniManager.Logic
             _repo = repo;
         }
 
-        public async Task CreateAsync(TeacherCreateDto teacher)
+        public async Task<Teacher> CreateAsync(TeacherCreateDto teacher)
         {
             var newTeacher = new Teacher
             {
                 firstName = teacher.firstName,
                 lastName = teacher.lastName,
             };
-            await _repo.CreateAsync(newTeacher);
+            return await _repo.CreateAsync(newTeacher);
         }
 
         public async Task<IEnumerable<Teacher>> ReadAllAsync(string includeProperties = "")

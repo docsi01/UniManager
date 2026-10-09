@@ -21,7 +21,7 @@ namespace UniManager.Logic
             _courseRepo = courseRepo;
         }
 
-        public async Task CreateAsync(EnrollmentCreateDto newEnrollment)
+        public async Task<Enrollment> CreateAsync(EnrollmentCreateDto newEnrollment)
         {
             var student = await _studentRepo.ReadAsync(newEnrollment.StudentId);
             if (student == null)

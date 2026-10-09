@@ -8,7 +8,7 @@ namespace UniManager.Logic
 {
     public interface IClassRoomLogic
     {
-        Task CreateAsync(ClassRoomCreateDto dto);
+        Task<ClassRoom> CreateAsync(ClassRoomCreateDto dto);
         Task<IEnumerable<ClassRoom>> ReadAllAsync(string includeProperties = "");
         Task<ClassRoom?> ReadAsync(int id);
         Task UpdateAsync(int id, ClassRoomUpdateDto dto);

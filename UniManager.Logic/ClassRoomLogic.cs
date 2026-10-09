@@ -11,14 +11,14 @@ namespace UniManager.Logic
         {
             _repo = repo;
         }
-        public async Task CreateAsync(ClassRoomCreateDto dto)
+        public async Task<ClassRoom> CreateAsync(ClassRoomCreateDto dto)
         {
             var newClassRoom = new ClassRoom
             {
                 RoomName = dto.RoomName,
                 Capacity = dto.Capacity,
             };
-            await _repo.CreateAsync(newClassRoom);
+            return await _repo.CreateAsync(newClassRoom);
         }
 
         public async Task<IEnumerable<ClassRoom>> ReadAllAsync(string includeProperties = "")

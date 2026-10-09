@@ -9,7 +9,7 @@ namespace UniManager.Logic
     public interface IStudentLogic
     {
         //async
-        Task CreateAsync(StudentCreateDto student);
+        Task<Student> CreateAsync(StudentCreateDto student);
         Task<IEnumerable<Student>> ReadAllAsync(string includeProperties="");
         Task <Student> ReadAsync(int id);
         Task UpdateAsync(int id, StudentUpdateDto student);

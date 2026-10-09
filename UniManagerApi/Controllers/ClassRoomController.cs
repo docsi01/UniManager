@@ -42,12 +42,8 @@ namespace UniManagerApi.Controllers
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] ClassRoomCreateDto newClassRoom)
         {
-            try
-            {
-                await _classroomLogic.CreateAsync(newClassRoom);
-                return Ok("Classroom created successfully!");
-            }
-            catch (Exception ex) { return StatusCode(500, ex.Message); }
+            var createdClassRoom = await _classroomLogic.CreateAsync(newClassRoom);
+            return CreatedAtAction(nameof(Read), new { id = createdClassRoom.Id }, createdClassRoom);
         }
 
         [HttpPut("{id}")]
@@ -59,7 +55,17 @@ namespace UniManagerApi.Controllers
                 return Ok("ClassRoom updated successfully!");
             }
             catch (Exception ex) { return StatusCode(500, ex.Message); }
+        }
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                await _classroomLogic.DeleteAsync(id);
+                return Ok("ClassRoom deleted successfully!");
+            }
+            catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
     }
 }

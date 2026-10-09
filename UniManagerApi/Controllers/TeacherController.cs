@@ -38,12 +38,8 @@ namespace UniManagerApi.Controllers
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] TeacherCreateDto newTeacher)
         {
-            try
-            {
-                await _teacherLogic.CreateAsync(newTeacher);
-                return Ok("Teacher created successfully!");
-            }
-            catch (Exception ex) { return StatusCode(500, ex.Message); }
+            var createdTeacher = await _teacherLogic.CreateAsync(newTeacher);
+            return CreatedAtAction(nameof(Read), new { id = createdTeacher.Id }, createdTeacher);
         }
 
         [HttpPut("{id}")]
@@ -53,6 +49,17 @@ namespace UniManagerApi.Controllers
             {
                 await _teacherLogic.UpdateAsync(id,updatedTeacher);
                 return Ok("Teacher updated successfully!");
+            }
+            catch (Exception ex) { return StatusCode(500, ex.Message); }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                await _teacherLogic.DeleteAsync(id);
+                return Ok("Teacher deleted successfully!");
             }
             catch (Exception ex) { return StatusCode(500, ex.Message); }
         }

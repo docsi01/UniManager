@@ -38,16 +38,12 @@ namespace UniManagerApi.Controllers
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] StudentCreateDto newStudent)
         {
-            try
-            {
-                newStudent.EnrollmentDate = DateTime.Now;
-                await _studentLogic.CreateAsync(newStudent);
-                return Ok("Student created successfully!");
-            }
-            catch (Exception ex) { return StatusCode(500, ex.Message); }
+            var createdStudent = await _studentLogic.CreateAsync(newStudent);
+            createdStudent.EnrollmentDate = DateTime.Now;
+            return CreatedAtAction(nameof(Read), new { id = createdStudent.Id }, createdStudent);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, [FromBody] StudentUpdateDto updatedStudent)
         {
             try
@@ -57,5 +53,6 @@ namespace UniManagerApi.Controllers
             }
             catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
+        [HttpDelete("{id}")]
     }
 }

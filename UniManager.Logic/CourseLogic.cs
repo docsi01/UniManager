@@ -12,7 +12,7 @@ namespace UniManager.Logic
             _repo = repo;
         }
 
-        public async Task CreateAsync(CourseCreateDto entity)
+        public async Task<Course> CreateAsync(CourseCreateDto entity)
         {
             var newCourse = new Course
             {
@@ -21,7 +21,7 @@ namespace UniManager.Logic
                 TeacherId = entity.TeacherId,
                 ClassRoomId = entity.ClassRooomId,
             };
-            await _repo.CreateAsync(newCourse);
+            return await _repo.CreateAsync(newCourse);
         }
         public async Task<IEnumerable<Course>> ReadAllAsync(string includeProperties = "")
         {
