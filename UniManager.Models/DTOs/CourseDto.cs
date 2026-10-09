@@ -9,7 +9,7 @@ namespace UniManager.Models.DTOs
         public string Title {  get; set; }=string.Empty;
         public int Credits {  get; set; }
         public int TeacherId {  get; set; }
-        public int ClassRooomId {  get; set; }
+        public int ClassRoomId {  get; set; }
     }
 
     public sealed class CourseUpdateDto

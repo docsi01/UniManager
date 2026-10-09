@@ -29,7 +29,7 @@ namespace UniManager.Logic
             return await _repo.ReadAllAsync(includeProperties);
         }
 
-        public async Task<Student> ReadAsync(int id)
+        public async Task<Student?> ReadAsync(int id)
         {
             return await _repo.ReadAsync(id);
         }

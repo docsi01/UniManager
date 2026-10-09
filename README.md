@@ -8,6 +8,7 @@ UniManager is a .NET 10 Web API for managing university students, teachers, cour
 - **UniManager.Logic** — application and enrollment logic
 - **UniManager.Repository** — generic EF Core repository, `UniDbContext`, and database migrations
 - **UniManager.Models** — domain entities and request DTOs
+- **UniManager.Tests** — NUnit unit tests for the student controller and logic
 
 ## Requirements
 
@@ -80,14 +81,14 @@ Create a classroom:
 }
 ```
 
-Create a course. The current create DTO property is spelled `classRooomId` (three `o` characters in `Rooom`):
+Create a course:
 
 ```json
 {
   "title": "Introduction to Computing",
   "credits": 3,
   "teacherId": 1,
-  "classRooomId": 1
+	"classRoomId": 1
 }
 ```
 

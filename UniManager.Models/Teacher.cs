@@ -9,8 +9,8 @@ namespace UniManager.Models
     public sealed class Teacher
     {
         public int Id { get; set; }
-        public string firstName { get; set; }=string.Empty;
-        public string lastName { get; set; } = string.Empty;
+        public string? firstName { get; set; }
+        public string? lastName { get; set; }
         public ICollection<Course>? Courses { get; set; }=new List<Course>();
     }
 }

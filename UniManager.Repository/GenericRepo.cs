@@ -46,11 +46,9 @@ namespace UniManager.Repository
             return entity;
         }
 
-        public async Task<T> ReadAsync(int id)
+        public async Task<T?> ReadAsync(int id)
         {
-            var entity = await _dbSet.FindAsync(id);
-            if (entity == null) throw new KeyNotFoundException($"{typeof(T).Name} not found!");
-            return entity;
+            return await _dbSet.FindAsync(id);
         }
 
         public void Create(T entity)
