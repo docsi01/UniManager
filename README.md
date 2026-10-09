@@ -44,31 +44,46 @@ The API uses `api/[controller]` routes. Controller names determine route segment
 | Students | GET | `/api/Student/all` | List students |
 | Students | GET | `/api/Student/{id}` | Get a student |
 | Students | POST | `/api/Student` | Create a student |
-| Students | PUT | `/api/Student?id={id}` | Update a student; `id` is a query parameter |
+| Students | PUT | `/api/Student/{id}` | Update a student |
+| Students | DELETE | `/api/Student/{id}` | Delete a student |
 | Courses | GET | `/api/Course/all` | List courses |
 | Courses | GET | `/api/Course/{id}` | Get a course |
 | Courses | POST | `/api/Course` | Create a course |
 | Courses | PUT | `/api/Course/{id}` | Update a course |
+| Courses | DELETE | `/api/Course/{id}` | Delete a course |
 | Teachers | GET | `/api/Teachers/all` | List teachers |
 | Teachers | GET | `/api/Teachers/{id}` | Get a teacher |
 | Teachers | POST | `/api/Teachers` | Create a teacher |
-| Teachers | PUT | `/api/Teachers?id={id}` | Update a teacher; `id` is a query parameter |
+| Teachers | PUT | `/api/Teachers/{id}` | Update a teacher |
+| Teachers | DELETE | `/api/Teachers/{id}` | Delete a teacher |
 | Classrooms | GET | `/api/ClassRoom/all` | List classrooms |
 | Classrooms | GET | `/api/ClassRoom/{id}` | Get a classroom |
 | Classrooms | POST | `/api/ClassRoom` | Create a classroom |
 | Classrooms | PUT | `/api/ClassRoom/{id}` | Update a classroom |
+| Classrooms | DELETE | `/api/ClassRoom/{id}` | Delete a classroom |
 | Enrollments | GET | `/api/Enrollment/all` | List enrollments |
+| Enrollments | GET | `/api/Enrollment/{id}` | Get an enrollment |
 | Enrollments | POST | `/api/Enrollment` | Enroll a student in a course |
 | Enrollments | PUT | `/api/Enrollment/{id}` | Update an enrollment |
+| Enrollments | DELETE | `/api/Enrollment/{id}` | Delete an enrollment |
+
+### Request validation and responses
+
+- Student and teacher names are required, nonblank, and limited to 100 characters. Course titles are required, nonblank, and limited to 200 characters; classroom names are limited to 100 characters.
+- Student `enrollmentDate` is required and must be today or earlier. It is supplied by the client; the API does not replace it with the current time.
+- Course credits must be between 1 and 6. Classroom capacity and all supplied IDs must be positive. Course teacher/classroom IDs and enrollment student/course IDs must refer to existing records.
+- Enrollment requests require nonblank `grade` and `status` values of at most 50 characters. The values supplied during creation are saved.
+- Invalid request data returns **400 Bad Request**. A referenced or requested resource that does not exist returns **404 Not Found**. Successful creates return **201 Created** with the created resource and a `Location` header. Duplicate enrollments return **409 Conflict**.
 
 ### Example requests
 
-Create a student (the API sets `EnrollmentDate` to the current server time):
+Create a student (the enrollment date must be today or earlier):
 
 ```json
 {
   "firstName": "Ada",
-  "lastName": "Lovelace"
+  "lastName": "Lovelace",
+  "enrollmentDate": "2000-01-01"
 }
 ```
 
@@ -88,16 +103,18 @@ Create a course:
   "title": "Introduction to Computing",
   "credits": 3,
   "teacherId": 1,
-	"classRoomId": 1
+  "classRoomId": 1
 }
 ```
 
-Enroll an existing student in an existing course. The logic sets the initial grade to `Not Graded` and status to `Enrolled`:
+Enroll an existing student in an existing course with the requested grade and status:
 
 ```json
 {
   "studentId": 1,
-  "courseId": 1
+  "courseId": 1,
+  "grade": "Not Graded",
+  "status": "Enrolled"
 }
 ```
 
