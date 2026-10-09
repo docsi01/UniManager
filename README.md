@@ -18,6 +18,13 @@ UniManager is a .NET 10 Web API for managing university students, teachers, cour
 
 ## Configure and run
 
+Clone the repository and move into its directory:
+
+```powershell
+git clone https://github.com/docsi01/UniManager.git
+cd UniManager
+```
+
 The API reads its SQL Server connection string from `ConnectionStrings:DefaultConnection`. Configure it using user secrets, environment variables, or local configuration; do not commit credentials.
 
 For example, in PowerShell, set an environment variable for a local LocalDB instance:
@@ -34,6 +41,14 @@ dotnet run --project UniManagerApi
 ```
 
 The HTTP launch profile uses `http://localhost:5234`; the HTTPS profile uses `https://localhost:7191`. In Development, Swagger UI is available at `/swagger` (for example, `http://localhost:5234/swagger`).
+
+Run the test suite from the solution directory with:
+
+```powershell
+dotnet test UniManager.slnx --configuration Release
+```
+
+GitHub Actions runs a Release build and the tests on every push and pull request.
 
 ## API endpoints
 
@@ -69,13 +84,20 @@ The API uses `api/[controller]` routes. Controller names determine route segment
 
 ### Request validation and responses
 
-- Student and teacher names are required, nonblank, and limited to 100 characters. Course titles are required, nonblank, and limited to 200 characters; classroom names are limited to 100 characters.
+- Student and teacher names are required, nonblank, and limited to 100 characters. Course titles are required, nonblank, and limited to 200 characters; classroom names are required, nonblank, and limited to 100 characters.
 - Student `enrollmentDate` is required and must be today or earlier. It is supplied by the client; the API does not replace it with the current time.
 - Course credits must be between 1 and 6. Classroom capacity and all supplied IDs must be positive. Course teacher/classroom IDs and enrollment student/course IDs must refer to existing records.
 - Enrollment requests require nonblank `grade` and `status` values of at most 50 characters. The values supplied during creation are saved.
 - Invalid request data returns **400 Bad Request**. A referenced or requested resource that does not exist returns **404 Not Found**. Successful creates return **201 Created** with the created resource and a `Location` header. Duplicate enrollments return **409 Conflict**.
 
 ### Example requests
+
+With the API running on the HTTP launch profile, create a student and then list students:
+
+```powershell
+curl.exe -X POST http://localhost:5234/api/Student -H "Content-Type: application/json" -d '{"firstName":"Ada","lastName":"Lovelace","enrollmentDate":"2000-01-01"}'
+curl.exe http://localhost:5234/api/Student/all
+```
 
 Create a student (the enrollment date must be today or earlier):
 
