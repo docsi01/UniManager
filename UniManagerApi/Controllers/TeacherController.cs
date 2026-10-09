@@ -30,14 +30,17 @@ namespace UniManagerApi.Controllers
             try
             {
                 var teachers = await _teacherLogic.ReadAsync(id);
+                if (teachers == null) { return NotFound($"No teacher found with this ID: {id}"); }
                 return Ok(teachers);
             }
+            catch (KeyNotFoundException ex) { return NotFound(ex.Message); }
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] TeacherCreateDto newTeacher)
         {
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
             var createdTeacher = await _teacherLogic.CreateAsync(newTeacher);
             return CreatedAtAction(nameof(Read), new { id = createdTeacher.Id }, createdTeacher);
         }
@@ -45,11 +48,13 @@ namespace UniManagerApi.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, [FromBody] TeacherUpdateDto updatedTeacher)
         {
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
             try
             {
                 await _teacherLogic.UpdateAsync(id,updatedTeacher);
                 return Ok("Teacher updated successfully!");
             }
+            catch (KeyNotFoundException ex) { return NotFound(ex.Message); }
             catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
 

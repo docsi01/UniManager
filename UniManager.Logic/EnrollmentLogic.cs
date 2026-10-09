@@ -26,13 +26,13 @@ namespace UniManager.Logic
             var student = await _studentRepo.ReadAsync(newEnrollment.StudentId);
             if (student == null)
             {
-                throw new Exception($"Student with this ID does not exist: {newEnrollment.StudentId}");
+                throw new KeyNotFoundException($"Student with this ID does not exist: {newEnrollment.StudentId}");
             }
 
             var course = await _courseRepo.ReadAsync(newEnrollment.CourseId);
             if (course == null)
             {
-                throw new Exception($"Course with this ID does not exist: {newEnrollment.CourseId}");
+                throw new KeyNotFoundException($"Course with this ID does not exist: {newEnrollment.CourseId}");
             }
 
             var allEnrollments = await _enrollRepo.ReadAllAsync();
@@ -41,17 +41,17 @@ namespace UniManager.Logic
                 e.CourseId == newEnrollment.CourseId);
             if (isAlreadyEnrolled)
             {
-                throw new Exception("This student is already enrolled in this course!");
+                throw new InvalidOperationException("This student is already enrolled in this course!");
             }
 
             var enrollment = new Enrollment
             {
                 StudentId = newEnrollment.StudentId,
                 CourseId = newEnrollment.CourseId,
-                Grade = "Not Graded",
-                Status = "Enrolled"
+                Grade = newEnrollment.Grade,
+                Status = newEnrollment.Status
             };
-            await _enrollRepo.CreateAsync(enrollment);
+            return await _enrollRepo.CreateAsync(enrollment);
         }
         public async Task<IEnumerable<Enrollment>> ReadAllAsync(string includeProperties = "")
         {
@@ -59,12 +59,17 @@ namespace UniManager.Logic
         }
         public async Task<Enrollment> ReadAsync(int id)
         {
-            return await _enrollRepo.ReadAsync(id);
+            var enrollment = await _enrollRepo.ReadAsync(id);
+            if (enrollment == null)
+            {
+                throw new KeyNotFoundException($"Enrollment with this ID ({id}) not found!");
+            }
+            return enrollment;
         }
         public async Task UpdateAsync(int id,EnrollmentUpdateDto updatedEnrollment)
         {
             var existingEnrollment = await _enrollRepo.ReadAsync(id);
-            if (existingEnrollment == null) { throw new Exception($"Student with this ID ({id}) not found!"); }
+            if (existingEnrollment == null) { throw new KeyNotFoundException($"Enrollment with this ID ({id}) not found!"); }
             
             existingEnrollment.Grade = updatedEnrollment.Grade;
             existingEnrollment.Status = updatedEnrollment.Status;

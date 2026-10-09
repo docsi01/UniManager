@@ -42,21 +42,32 @@ namespace UniManagerApi.Controllers
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] StudentCreateDto newStudent)
         {
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
             var createdStudent = await _studentLogic.CreateAsync(newStudent);
-            createdStudent.EnrollmentDate = DateTime.Now;
             return CreatedAtAction(nameof(Read), new { id = createdStudent.Id }, createdStudent);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, [FromBody] StudentUpdateDto updatedStudent)
         {
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
             try
             {
                 await _studentLogic.UpdateAsync(id, updatedStudent);
                 return Ok("Student updated successfully!");
             }
+            catch (KeyNotFoundException ex) { return NotFound(ex.Message); }
             catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
         [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                await _studentLogic.DeleteAsync(id);
+                return Ok("Student deleted successfully!");
+            }
+            catch (Exception ex) { return StatusCode(500, ex.Message); }
+        }
     }
 }

@@ -26,26 +26,37 @@ namespace UniManagerApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Enrollment>> Read(int id)
         {
-            var enrollment = await _enrollLogic.ReadAsync(id);
-            if (enrollment == null) return NotFound();
-            return Ok(enrollment);
+            try
+            {
+                var enrollment = await _enrollLogic.ReadAsync(id);
+                return Ok(enrollment);
+            }
+            catch (KeyNotFoundException ex) { return NotFound(ex.Message); }
         }
 
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] EnrollmentCreateDto newEnrollment)
         {
-            var createdEnrollment = await _enrollLogic.CreateAsync(newEnrollment);
-            return CreatedAtAction(nameof(Read), new { id = createdEnrollment.Id }, createdEnrollment);
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
+            try
+            {
+                var createdEnrollment = await _enrollLogic.CreateAsync(newEnrollment);
+                return CreatedAtAction(nameof(Read), new { id = createdEnrollment.Id }, createdEnrollment);
+            }
+            catch (KeyNotFoundException ex) { return NotFound(ex.Message); }
+            catch (InvalidOperationException ex) { return Conflict(ex.Message); }
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, [FromBody] EnrollmentUpdateDto updatedEnrollment)
         {
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
             try
             {
                 await _enrollLogic.UpdateAsync(id, updatedEnrollment);
                 return Ok("Enrollment successfully updated!");
             }
+            catch (KeyNotFoundException ex) { return NotFound(ex.Message); }
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
 

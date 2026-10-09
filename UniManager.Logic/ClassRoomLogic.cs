@@ -33,7 +33,7 @@ namespace UniManager.Logic
         public async Task UpdateAsync(int id, ClassRoomUpdateDto dto)
         {
             var existingClassRoom = await _repo.ReadAsync(id);
-            if (existingClassRoom == null) { throw new Exception($"Classroom with this ID ({id}) not found!"); }
+            if (existingClassRoom == null) { throw new KeyNotFoundException($"Classroom with this ID ({id}) not found!"); }
             existingClassRoom.Capacity = dto.Capacity;
             existingClassRoom.RoomName = dto.RoomName;
             await _repo.UpdateAsync(existingClassRoom);

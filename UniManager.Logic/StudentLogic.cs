@@ -37,7 +37,7 @@ namespace UniManager.Logic
         public async Task UpdateAsync(int id, StudentUpdateDto student)
         {
             var existingStudent = await _repo.ReadAsync(id);
-            if (existingStudent == null) { throw new Exception($"Student with this ID ({id}) not found!"); }
+            if (existingStudent == null) { throw new KeyNotFoundException($"Student with this ID ({id}) not found!"); }
 
             existingStudent.firstName = student.firstName;
             existingStudent.lastName = student.lastName;

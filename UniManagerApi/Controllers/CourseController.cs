@@ -24,31 +24,40 @@ namespace UniManagerApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> Read(int id)
+        public async Task<ActionResult<Course>> Read(int id)
         {
             if (id <= 0) { return BadRequest("The ID must be greater than 0"); }
             try
             {
-                await _courseLogic.ReadAsync(id);
-                return Ok("Course created successfully!");
+                var course = await _courseLogic.ReadAsync(id);
+                if (course == null) { return NotFound($"No course found with this ID: {id}"); }
+                return Ok(course);
             }
+            catch (KeyNotFoundException ex) { return NotFound(ex.Message); }
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] CourseCreateDto newCourse)
         {
-            var createdCourse = await _courseLogic.CreateAsync(newCourse);
-            return CreatedAtAction(nameof(Read), new { id = createdCourse.Id }, createdCourse);
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
+            try
+            {
+                var createdCourse = await _courseLogic.CreateAsync(newCourse);
+                return CreatedAtAction(nameof(Read), new { id = createdCourse.Id }, createdCourse);
+            }
+            catch (KeyNotFoundException ex) { return NotFound(ex.Message); }
         }
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, [FromBody] CourseUpdateDto updatedCourse)
         {
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
             try
             {
                 await _courseLogic.UpdateAsync(id,updatedCourse);
                 return Ok("Course successfully updated!");
             }
+            catch (KeyNotFoundException ex) { return NotFound(ex.Message); }
             catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
         [HttpDelete("{id}")]

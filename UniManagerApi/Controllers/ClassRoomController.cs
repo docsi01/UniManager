@@ -42,6 +42,7 @@ namespace UniManagerApi.Controllers
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] ClassRoomCreateDto newClassRoom)
         {
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
             var createdClassRoom = await _classroomLogic.CreateAsync(newClassRoom);
             return CreatedAtAction(nameof(Read), new { id = createdClassRoom.Id }, createdClassRoom);
         }
@@ -49,11 +50,13 @@ namespace UniManagerApi.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, [FromBody] ClassRoomUpdateDto updatedClassRoom)
         {
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
             try
             {
                 await _classroomLogic.UpdateAsync(id, updatedClassRoom);
                 return Ok("ClassRoom updated successfully!");
             }
+            catch (KeyNotFoundException ex) { return NotFound(ex.Message); }
             catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
 

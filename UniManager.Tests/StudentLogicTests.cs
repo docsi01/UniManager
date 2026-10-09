@@ -37,7 +37,7 @@ namespace UniManager.Tests
             int fakeId = 999;
             var updateDto = new StudentUpdateDto { firstName = "Fake", lastName = "User" };
             mockRepo.Setup(repo => repo.ReadAsync(fakeId)).ReturnsAsync((Student?)null);
-            var ex = Assert.ThrowsAsync<Exception>(async () => await studentLogic.UpdateAsync(fakeId, updateDto));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await studentLogic.UpdateAsync(fakeId, updateDto));
             Assert.That(ex.Message, Is.EqualTo($"Student with this ID ({fakeId}) not found!"));
             mockRepo.Verify(repo => repo.UpdateAsync(It.IsAny<Student>()), Times.Never);
         }
