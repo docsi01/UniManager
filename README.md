@@ -159,7 +159,7 @@ The API uses `api/[controller]` routes. Controller names determine route segment
 
 ### Example requests
 
-With the API running on the HTTP launch profile, create a student and then list students:
+Create a student (the enrollment date must be today or earlier), then list students:
 
 ```powershell
 curl.exe -X POST http://localhost:5234/api/Student -H "Content-Type: application/json" -d '{"firstName":"Ada","lastName":"Lovelace","enrollmentDate":"2000-01-01"}'
