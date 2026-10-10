@@ -5,7 +5,28 @@ A .NET 10 REST API for managing university students, courses, teachers, classroo
 [![.NET CI](https://github.com/docsi01/UniManager/actions/workflows/ci.yml/badge.svg)](https://github.com/docsi01/UniManager/actions/workflows/ci.yml)
 ![.NET 10](https://img.shields.io/badge/.NET-10-512BD4)
 
-**Topics:** `dotnet` · `aspnet-core` · `entity-framework-core` · `rest-api`
+## Features
+
+- **Layered architecture:** API, business logic, repository, and models are separate projects, so each layer can be tested and changed on its own.
+- **Generic EF Core repository** with SQL Server and versioned migrations.
+- **Full CRUD** for students, teachers, courses, classrooms, and enrollments.
+- **Strict request validation:** length limits, credit ranges, date rules, and checks that referenced IDs exist.
+- **Consistent HTTP semantics:** `201 Created` with a `Location` header, `400` for invalid input, `404` for missing resources, and `409` for duplicate enrollments.
+- **Interactive API docs** via Swagger UI.
+- **Automated quality checks:** NUnit tests and a GitHub Actions pipeline that builds and tests on every push and pull request.
+
+## Roadmap
+
+- [ ] Enforce classroom capacity on enrollment, with a waitlist
+- [ ] Course scheduling with conflict detection for rooms, teachers, and overlapping student classes
+- [ ] Course prerequisites
+- [ ] Replace string `grade` and `status` with a numeric grade and a status enum, plus GPA calculation
+- [ ] Handle concurrent enrollments safely (optimistic concurrency) with a test that proves it
+- [ ] JWT authentication with Admin, Teacher, and Student roles
+- [ ] Pagination, filtering, and sorting on list endpoints
+- [ ] Global error handling with `ProblemDetails` responses
+- [ ] Integration tests with `WebApplicationFactory` and Testcontainers
+- [ ] Dockerfile and `docker-compose.yml`, then a live deployment
 
 ## Projects
 
