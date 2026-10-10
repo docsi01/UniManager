@@ -1,6 +1,11 @@
 # UniManager
 
-UniManager is a .NET 10 Web API for managing university students, teachers, courses, classrooms, and course enrollments. The solution is organized into API, business-logic, repository, and model projects, and uses Entity Framework Core with SQL Server.
+A .NET 10 REST API for managing university students, courses, teachers, classrooms, and enrollments.
+
+[![.NET CI](https://github.com/docsi01/UniManager/actions/workflows/ci.yml/badge.svg)](https://github.com/docsi01/UniManager/actions/workflows/ci.yml)
+![.NET 10](https://img.shields.io/badge/.NET-10-512BD4)
+
+**Topics:** `dotnet` · `aspnet-core` · `entity-framework-core` · `rest-api`
 
 ## Projects
 
@@ -9,6 +14,47 @@ UniManager is a .NET 10 Web API for managing university students, teachers, cour
 - **UniManager.Repository** — generic EF Core repository, `UniDbContext`, and database migrations
 - **UniManager.Models** — domain entities and request DTOs
 - **UniManager.Tests** — NUnit unit tests for the student controller and logic
+
+## Entity relationship diagram
+
+```mermaid
+erDiagram
+	STUDENT ||--o{ ENROLLMENT : has
+	COURSE ||--o{ ENROLLMENT : includes
+	TEACHER ||--o{ COURSE : teaches
+	CLASSROOM ||--o{ COURSE : hosts
+
+	STUDENT {
+		int Id PK
+		string FirstName
+		string LastName
+		datetime EnrollmentDate
+	}
+	ENROLLMENT {
+		int Id PK
+		int StudentId FK
+		int CourseId FK
+		string Grade
+		string Status
+	}
+	COURSE {
+		int Id PK
+		string Title
+		int Credits
+		int TeacherId FK
+		int ClassRoomId FK
+	}
+	TEACHER {
+		int Id PK
+		string FirstName
+		string LastName
+	}
+	CLASSROOM {
+		int Id PK
+		string RoomName
+		int Capacity
+	}
+```
 
 ## Requirements
 
