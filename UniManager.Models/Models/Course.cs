@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace UniManager.Models
+namespace UniManager.Models.Models
 {
     public sealed class Course
     {

@@ -1,8 +1,9 @@
-﻿using UniManager.Models;
-using UniManager.Repository;
+﻿using UniManager.Repository;
 using UniManager.Models.DTOs;
+using UniManager.Logic.Interfaces;
+using UniManager.Models.Models;
 
-namespace UniManager.Logic
+namespace UniManager.Logic.Logic
 {
     public sealed class EnrollmentLogic : IEnrollmentLogic
     {

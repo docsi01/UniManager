@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UniManager.Logic;
-using UniManager.Models;
+using UniManager.Logic.Interfaces;
 using UniManager.Models.DTOs;
+using UniManager.Models.Models;
 
 namespace UniManagerApi.Controllers
 {

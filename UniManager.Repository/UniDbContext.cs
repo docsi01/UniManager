@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using UniManager.Models;
+using UniManager.Models.Models;
 
 namespace UniManager.Repository
 {

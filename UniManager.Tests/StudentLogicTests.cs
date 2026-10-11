@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UniManager.Logic;
-using UniManager.Models;
 using UniManager.Models.DTOs;
+using UniManager.Models.Models;
 using UniManager.Repository;
 
 namespace UniManager.Tests
