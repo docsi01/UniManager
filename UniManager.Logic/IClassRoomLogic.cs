@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using UniManager.Models;
 using UniManager.Models.DTOs;
-using UniManager.Models.Models;
 
-namespace UniManager.Logic.Interfaces
+namespace UniManager.Logic
 {
     public interface IClassRoomLogic
     {

@@ -1,14 +1,14 @@
-﻿using UniManager.Models.DTOs;
-using UniManager.Models.Models;
+﻿using UniManager.Models;
+using UniManager.Models.DTOs;
 
-namespace UniManager.Logic.Interfaces
+namespace UniManager.Logic
 {
     public interface IEnrollmentLogic
     {
-        Task<Enrollment> EnrollAsync(EnrollmentCreateDto enrollment);
+        Task<Enrollment> CreateAsync(EnrollmentCreateDto enrollment);
         Task<IEnumerable<Enrollment>> ReadAllAsync(string includeProperties = "");
         Task<Enrollment> ReadAsync(int id);
         Task UpdateAsync(int id, EnrollmentUpdateDto enrollment);
-        Task DropAsync(int id);
+        Task DeleteAsync(int id);
     }
 }

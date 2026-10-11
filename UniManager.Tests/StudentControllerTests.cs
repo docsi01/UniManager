@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using Moq;
+using UniManager.Logic;
+using UniManager.Models;
 using UniManager.Models.DTOs;
 using UniManagerApi.Controllers;
-using UniManager.Logic.Interfaces;
-using UniManager.Models.Models;
 
 namespace UniManager.Tests
 {

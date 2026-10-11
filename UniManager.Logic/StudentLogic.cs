@@ -1,9 +1,8 @@
-﻿using UniManager.Logic.Interfaces;
+﻿using UniManager.Models;
 using UniManager.Models.DTOs;
-using UniManager.Models.Models;
 using UniManager.Repository;
 
-namespace UniManager.Logic.Logic
+namespace UniManager.Logic
 {
     public sealed class StudentLogic : IStudentLogic
     {

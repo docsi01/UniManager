@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UniManager.Logic.Interfaces;
+using UniManager.Logic;
+using UniManager.Models;
 using UniManager.Models.DTOs;
-using UniManager.Models.Models;
 
 namespace UniManagerApi.Controllers
 {
@@ -58,7 +58,6 @@ namespace UniManagerApi.Controllers
                 return Ok("Course successfully updated!");
             }
             catch (KeyNotFoundException ex) { return NotFound(ex.Message); }
-            catch (InvalidOperationException ex) { return Conflict(ex.Message); }
             catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
         [HttpDelete("{id}")]

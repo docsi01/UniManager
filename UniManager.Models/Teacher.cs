@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace UniManager.Models.Models
+namespace UniManager.Models
 {
     public sealed class Teacher
     {

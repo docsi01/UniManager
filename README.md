@@ -9,9 +9,7 @@ A .NET 10 REST API for managing university students, courses, teachers, classroo
 
 - **Layered architecture:** API, business logic, repository, and models are separate projects, so each layer can be tested and changed on its own.
 - **Generic EF Core repository** with SQL Server and versioned migrations.
-- **Resource management** for students, teachers, courses, classrooms, and enrollment history; deleting an enrollment records a drop rather than removing its history.
-- **Capacity enforcement with a waitlist:** course seats are limited by classroom capacity, and waitlisted students are promoted in queue order when seats open.
-- **Optimistic concurrency:** row-version retries protect enrollment and drop operations from concurrent seat updates.
+- **Full CRUD** for students, teachers, courses, classrooms, and enrollments.
 - **Strict request validation:** length limits, credit ranges, date rules, and checks that referenced IDs exist.
 - **Consistent HTTP semantics:** `201 Created` with a `Location` header, `400` for invalid input, `404` for missing resources, and `409` for duplicate enrollments.
 - **Interactive API docs** via Swagger UI.
@@ -19,9 +17,11 @@ A .NET 10 REST API for managing university students, courses, teachers, classroo
 
 ## Roadmap
 
-- [✓] Course scheduling with conflict detection for rooms, teachers, and overlapping student classes
+- [ ] Enforce classroom capacity on enrollment, with a waitlist
+- [ ] Course scheduling with conflict detection for rooms, teachers, and overlapping student classes
 - [ ] Course prerequisites
-- [ ] Add numeric grades and GPA calculation
+- [ ] Replace string `grade` and `status` with a numeric grade and a status enum, plus GPA calculation
+- [ ] Handle concurrent enrollments safely (optimistic concurrency) with a test that proves it
 - [ ] JWT authentication with Admin, Teacher, and Student roles
 - [ ] Pagination, filtering, and sorting on list endpoints
 - [ ] Global error handling with `ProblemDetails` responses
@@ -34,13 +34,12 @@ A .NET 10 REST API for managing university students, courses, teachers, classroo
 - **UniManager.Logic** — application and enrollment logic
 - **UniManager.Repository** — generic EF Core repository, `UniDbContext`, and database migrations
 - **UniManager.Models** — domain entities and request DTOs
-- **UniManager.Tests** — NUnit unit tests for enrollment/course logic and API controllers
+- **UniManager.Tests** — NUnit unit tests for the student controller and logic
 
 ## Entity relationship diagram
 
 ```mermaid
 erDiagram
-	%% EnrollmentStatus values: Enrolled, Waitlisted, Dropped, Completed
 	STUDENT ||--o{ ENROLLMENT : has
 	COURSE ||--o{ ENROLLMENT : includes
 	TEACHER ||--o{ COURSE : teaches
@@ -57,8 +56,7 @@ erDiagram
 		int StudentId FK
 		int CourseId FK
 		string Grade
-		EnrollmentStatus Status
-		datetime CreatedAt
+		string Status
 	}
 	COURSE {
 		int Id PK
@@ -66,7 +64,6 @@ erDiagram
 		int Credits
 		int TeacherId FK
 		int ClassRoomId FK
-		int EnrolledCount
 	}
 	TEACHER {
 		int Id PK
@@ -149,17 +146,16 @@ The API uses `api/[controller]` routes. Controller names determine route segment
 | Enrollments | GET | `/api/Enrollment/all` | List enrollments |
 | Enrollments | GET | `/api/Enrollment/{id}` | Get an enrollment |
 | Enrollments | POST | `/api/Enrollment` | Enroll a student in a course |
-| Enrollments | PUT | `/api/Enrollment/{id}` | Update only the grade (`null` means not graded) |
-| Enrollments | DELETE | `/api/Enrollment/{id}` | Drop an enrollment and retain its history |
+| Enrollments | PUT | `/api/Enrollment/{id}` | Update an enrollment |
+| Enrollments | DELETE | `/api/Enrollment/{id}` | Delete an enrollment |
 
 ### Request validation and responses
 
 - Student and teacher names are required, nonblank, and limited to 100 characters. Course titles are required, nonblank, and limited to 200 characters; classroom names are required, nonblank, and limited to 100 characters.
 - Student `enrollmentDate` is required and must be today or earlier. It is supplied by the client; the API does not replace it with the current time.
 - Course credits must be between 1 and 6. Classroom capacity and all supplied IDs must be positive. Course teacher/classroom IDs and enrollment student/course IDs must refer to existing records.
-- Enrollment creation accepts only `studentId` and `courseId`; the server sets `grade` to `null` and chooses `Enrolled` or `Waitlisted`. A full course returns **201 Created** with status `Waitlisted`. Dropped enrollments remain as history, and the oldest waitlisted student is promoted when an enrolled student drops.
-- Enrollment status cannot be changed with PUT; only the nullable grade can be updated.
-- Moving a course to a classroom that cannot fit its current enrolled count returns **409 Conflict**. Invalid request data returns **400 Bad Request**. A referenced or requested resource that does not exist returns **404 Not Found**. Successful creates return **201 Created** with the created resource and a `Location` header. Duplicate enrollments return **409 Conflict**.
+- Enrollment requests require nonblank `grade` and `status` values of at most 50 characters. The values supplied during creation are saved.
+- Invalid request data returns **400 Bad Request**. A referenced or requested resource that does not exist returns **404 Not Found**. Successful creates return **201 Created** with the created resource and a `Location` header. Duplicate enrollments return **409 Conflict**.
 
 ### Example requests
 
@@ -200,12 +196,14 @@ Create a course:
 }
 ```
 
-Enroll an existing student in an existing course. The server assigns the status; a full course places the student on the waitlist:
+Enroll an existing student in an existing course with the requested grade and status:
 
 ```json
 {
   "studentId": 1,
-  "courseId": 1
+  "courseId": 1,
+  "grade": "Not Graded",
+  "status": "Enrolled"
 }
 ```
 

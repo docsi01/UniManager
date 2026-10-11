@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UniManager.Logic.Interfaces;
+using UniManager.Logic;
+using UniManager.Models;
 using UniManager.Models.DTOs;
-using UniManager.Models.Models;
 
 namespace UniManagerApi.Controllers
 {
@@ -40,7 +40,7 @@ namespace UniManagerApi.Controllers
             if (!ModelState.IsValid) { return BadRequest(ModelState); }
             try
             {
-                var createdEnrollment = await _enrollLogic.EnrollAsync(newEnrollment);
+                var createdEnrollment = await _enrollLogic.CreateAsync(newEnrollment);
                 return CreatedAtAction(nameof(Read), new { id = createdEnrollment.Id }, createdEnrollment);
             }
             catch (KeyNotFoundException ex) { return NotFound(ex.Message); }
@@ -65,11 +65,9 @@ namespace UniManagerApi.Controllers
         {
             try
             {
-                await _enrollLogic.DropAsync(id);
-                return Ok("Enrollment dropped successfully!");
+                await _enrollLogic.DeleteAsync(id);
+                return Ok("Enrollment deleted successfully!");
             }
-            catch (KeyNotFoundException ex) { return NotFound(ex.Message); }
-            catch (InvalidOperationException ex) { return Conflict(ex.Message); }
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
 

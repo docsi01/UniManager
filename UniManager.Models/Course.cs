@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace UniManager.Models.Models
+namespace UniManager.Models
 {
     public sealed class Course
     {
@@ -15,8 +15,6 @@ namespace UniManager.Models.Models
         public Teacher? Teacher { get; set; }
         public int ClassRoomId { get; set; }
         public ClassRoom? ClassRoom { get; set; }
-        public int EnrolledCount { get; set; }
-        public byte[] RowVersion { get; set; } = null!;
         public ICollection<Enrollment>? Enrollments { get; set; } = new List<Enrollment>();
     }
 }

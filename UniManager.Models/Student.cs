@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace UniManager.Models.Models
+namespace UniManager.Models
 {
     public sealed class Student
     {

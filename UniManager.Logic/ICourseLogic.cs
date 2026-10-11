@@ -1,7 +1,7 @@
-﻿using UniManager.Models.DTOs;
-using UniManager.Models.Models;
+﻿using UniManager.Models;
+using UniManager.Models.DTOs;
 
-namespace UniManager.Logic.Interfaces
+namespace UniManager.Logic
 {
     public interface ICourseLogic
     {

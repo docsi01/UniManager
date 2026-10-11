@@ -51,41 +51,6 @@ namespace UniManager.Repository
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<T?> ReadAsync(int id, string includeProperties)
-        {
-            IQueryable<T> query = _dbSet;
-            if (!string.IsNullOrWhiteSpace(includeProperties))
-            {
-                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    query = query.Include(includeProperty);
-                }
-            }
-            return await query.FirstOrDefaultAsync(entity => EF.Property<int>(entity, "Id") == id);
-        }
-
-        public void AddWithoutSaving(T entity)
-        {
-            ArgumentNullException.ThrowIfNull(entity);
-            _dbSet.Add(entity);
-        }
-
-        public void UpdateWithoutSaving(T entity)
-        {
-            ArgumentNullException.ThrowIfNull(entity);
-            _ctx.Entry(entity).State = EntityState.Modified;
-        }
-
-        public async Task SaveChangesAsync()
-        {
-            await _ctx.SaveChangesAsync();
-        }
-
-        public void ClearChangeTracker()
-        {
-            _ctx.ChangeTracker.Clear();
-        }
-
         public void Create(T entity)
         {
             ArgumentNullException.ThrowIfNull(entity);
