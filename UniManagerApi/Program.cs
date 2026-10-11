@@ -1,15 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
-using UniManager.Logic;
-using UniManager.Models;
+using UniManager.Logic.Interfaces;
+using UniManager.Logic.Logic;
 using UniManager.Models.DTOs;
+using UniManager.Models.Models;
 using UniManager.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;});
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 

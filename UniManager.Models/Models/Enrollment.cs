@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json.Serialization;
-
-namespace UniManager.Models
+﻿namespace UniManager.Models.Models
 {
     public sealed class Enrollment
     {
@@ -11,7 +6,8 @@ namespace UniManager.Models
         public int CourseId { get; set; }
         public int StudentId { get; set; }
         public string? Grade { get; set; }
-        public string? Status { get; set; }
+        public EnrollmentStatus Status { get; set; }
+        public DateTime CreatedAt { get; set; }
         public Student? Student { get; set; }
         public Course? Course { get; set; }
     }

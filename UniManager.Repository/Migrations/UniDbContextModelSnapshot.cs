@@ -22,7 +22,7 @@ namespace UniManager.Repository.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("UniManager.Models.ClassRoom", b =>
+            modelBuilder.Entity("UniManager.Models.Models.ClassRoom", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -41,7 +41,7 @@ namespace UniManager.Repository.Migrations
                     b.ToTable("ClassRooms");
                 });
 
-            modelBuilder.Entity("UniManager.Models.Course", b =>
+            modelBuilder.Entity("UniManager.Models.Models.Course", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -54,6 +54,17 @@ namespace UniManager.Repository.Migrations
 
                     b.Property<int>("Credits")
                         .HasColumnType("int");
+
+                    b.Property<int>("EnrolledCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<int>("TeacherId")
                         .HasColumnType("int");
@@ -70,7 +81,7 @@ namespace UniManager.Repository.Migrations
                     b.ToTable("Courses");
                 });
 
-            modelBuilder.Entity("UniManager.Models.Enrollment", b =>
+            modelBuilder.Entity("UniManager.Models.Models.Enrollment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -81,25 +92,34 @@ namespace UniManager.Repository.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
+
                     b.Property<string>("Grade")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("StudentId", "CourseId")
+                        .IsUnique()
+                        .HasFilter("[Status] IN ('Enrolled', 'Waitlisted')");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("CourseId", "Status", "CreatedAt");
 
                     b.ToTable("Enrollments");
                 });
 
-            modelBuilder.Entity("UniManager.Models.Student", b =>
+            modelBuilder.Entity("UniManager.Models.Models.Student", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -121,7 +141,7 @@ namespace UniManager.Repository.Migrations
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("UniManager.Models.Teacher", b =>
+            modelBuilder.Entity("UniManager.Models.Models.Teacher", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -140,15 +160,15 @@ namespace UniManager.Repository.Migrations
                     b.ToTable("Teachers");
                 });
 
-            modelBuilder.Entity("UniManager.Models.Course", b =>
+            modelBuilder.Entity("UniManager.Models.Models.Course", b =>
                 {
-                    b.HasOne("UniManager.Models.ClassRoom", "ClassRoom")
+                    b.HasOne("UniManager.Models.Models.ClassRoom", "ClassRoom")
                         .WithMany("Courses")
                         .HasForeignKey("ClassRoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UniManager.Models.Teacher", "Teacher")
+                    b.HasOne("UniManager.Models.Models.Teacher", "Teacher")
                         .WithMany("Courses")
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -159,18 +179,18 @@ namespace UniManager.Repository.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("UniManager.Models.Enrollment", b =>
+            modelBuilder.Entity("UniManager.Models.Models.Enrollment", b =>
                 {
-                    b.HasOne("UniManager.Models.Course", "Course")
+                    b.HasOne("UniManager.Models.Models.Course", "Course")
                         .WithMany("Enrollments")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("UniManager.Models.Student", "Student")
+                    b.HasOne("UniManager.Models.Models.Student", "Student")
                         .WithMany("Enrollments")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Course");
@@ -178,22 +198,22 @@ namespace UniManager.Repository.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("UniManager.Models.ClassRoom", b =>
+            modelBuilder.Entity("UniManager.Models.Models.ClassRoom", b =>
                 {
                     b.Navigation("Courses");
                 });
 
-            modelBuilder.Entity("UniManager.Models.Course", b =>
+            modelBuilder.Entity("UniManager.Models.Models.Course", b =>
                 {
                     b.Navigation("Enrollments");
                 });
 
-            modelBuilder.Entity("UniManager.Models.Student", b =>
+            modelBuilder.Entity("UniManager.Models.Models.Student", b =>
                 {
                     b.Navigation("Enrollments");
                 });
 
-            modelBuilder.Entity("UniManager.Models.Teacher", b =>
+            modelBuilder.Entity("UniManager.Models.Models.Teacher", b =>
                 {
                     b.Navigation("Courses");
                 });

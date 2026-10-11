@@ -1,8 +1,9 @@
-﻿using UniManager.Models;
+﻿using UniManager.Logic.Interfaces;
 using UniManager.Models.DTOs;
+using UniManager.Models.Models;
 using UniManager.Repository;
 
-namespace UniManager.Logic
+namespace UniManager.Logic.Logic
 {
     public sealed class CourseLogic : ICourseLogic
     {
@@ -45,6 +46,19 @@ namespace UniManager.Logic
             await ValidateReferencesAsync(entity.TeacherId, entity.ClassRoomId);
             var existingCourse= await _repo.ReadAsync(id);
             if (existingCourse == null) { throw new KeyNotFoundException($"Course with this ID ({id}) was not found!"); }
+
+            if (existingCourse.ClassRoomId != entity.ClassRoomId)
+            {
+                var newClassRoom = await _classRoomRepo.ReadAsync(entity.ClassRoomId);
+                if (newClassRoom == null)
+                {
+                    throw new KeyNotFoundException($"Classroom with this ID ({entity.ClassRoomId}) was not found!");
+                }
+                if (existingCourse.EnrolledCount > newClassRoom.Capacity)
+                {
+                    throw new InvalidOperationException("The course cannot be moved to a classroom with less capacity than its enrolled count.");
+                }
+            }
 
             existingCourse.Title = entity.Title;
             existingCourse.Credits = entity.Credits;
